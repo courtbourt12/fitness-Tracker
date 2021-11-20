@@ -1,5 +1,20 @@
 const router = require("express").Router();
 const Workout = require("../models/workout");
+const path = require('path');
+
+router.get("/exercise", (req, res) => {
+    res.sendFile(path.join(__dirname, "../public/exercise.html"))
+});
+
+router.get("/", (req, res) => {
+    res.sendFile(path.join(__dirname, "../public/index.html"))
+});
+
+router.get("/stats", (req, res) => {
+    res.sendFile(path.join(__dirname, "../public/stats.html"))
+});
+
+module.exports = router;
 
 router.get("/api/workouts", (req, res) => {
     Workout.findOne({})
@@ -19,13 +34,14 @@ router.post("/api/workouts", ({body}, res) => {
     });
 });
 
-router.put("/api/workouts", ({body}, res) => {
-    Workout.updateOne({
-        _id: mongojs.ObjectId(body.id),
+router.put("/api/workouts/:id", (req, res) => {
+    Workout.updateOne
+    (
+        {
+        _id: req.params.id,
     },
-    {
-        $set: {body}
-    })
+        req.body
+    )
     .then(dbWorkout => {
         res.json(dbWorkout);
     })
